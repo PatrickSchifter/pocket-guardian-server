@@ -2,9 +2,11 @@ import express from 'express';
 import router from './routes';
 import { config } from './config/config';
 import cors from 'cors';
+import ip from 'ip'; // Importe o pacote ip
 
 const app = express();
 const port = config.port || 3000;
+const serverIp = ip.address(); // Use o método address() para obter o IP
 
 app.use(express.json());
 app.use(cors());
@@ -16,7 +18,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
+  console.log(`running on ip: ${serverIp} and port ${port}`); // Exiba o IP e a porta
 });
 
 export default app;
