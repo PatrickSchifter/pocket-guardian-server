@@ -1,5 +1,6 @@
 import { EmailService } from './EmailService';
 import { config } from '../config/config';
+import { getConfirmationEmail } from '../utils/htmlConfirmationEmail';
 
 export class ConfirmationEmailSender {
   private readonly emailService: EmailService;
@@ -14,8 +15,8 @@ export class ConfirmationEmailSender {
   async sendEmail(email: string, id: string): Promise<void> {
     const emailData = {
       to: [email],
-      subject: 'Confirmation Email Rateio Digital',
-      html: `<a href="${config.email.link_confirmation + id || ''}">Click here to confirm your email</a>`,
+      subject: 'Confirmation Email Pocket Guardian',
+      html: getConfirmationEmail(config.email.link_confirmation + id || '')
     };
 
     try {
