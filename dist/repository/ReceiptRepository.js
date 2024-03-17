@@ -1,29 +1,27 @@
-import { PrismaClient } from '@prisma/client';
-import { ReceiptCreate, Receipt } from '../interfaces/ReceiptInterface';
-const prisma = new PrismaClient();
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 class ReceiptRepository {
-    async getAllReceipts(chargeId: number): Promise<Receipt[]> {
+    async getAllReceipts(chargeId) {
         const receipts = await prisma.receipt.findMany({
-            where:{
+            where: {
                 chargeId
             }
         });
         return receipts;
     }
-
-    async getReceiptById(id: number): Promise<Receipt | null> {
+    async getReceiptById(id) {
         const receipts = await prisma.receipt.findUnique({
-            where:{
+            where: {
                 id
             }
         });
         return receipts;
     }
-
-    async create({chargeId, amount, name, status, paid}: ReceiptCreate): Promise<Receipt | null>{
+    async create({ chargeId, amount, name, status, paid }) {
         const receipt = await prisma.receipt.create({
-            data:{
+            data: {
                 amount,
                 name,
                 status,
@@ -33,32 +31,29 @@ class ReceiptRepository {
         });
         return receipt;
     }
-
-    async updateUrl(url: string, id: number): Promise<Receipt | null>{
+    async updateUrl(url, id) {
         const receipt = await prisma.receipt.update({
-            data:{
+            data: {
                 url,
                 status: 'Under analysis'
             },
-            where:{
+            where: {
                 id
             }
         });
         return receipt;
     }
-
-    async paymentConfirmation(id: number): Promise<Receipt | null>{
+    async paymentConfirmation(id) {
         const receipt = await prisma.receipt.update({
-            data:{
+            data: {
                 paid: true,
                 status: 'Paid'
             },
-            where:{
+            where: {
                 id
             }
         });
         return receipt;
     }
 }
-
-export default ReceiptRepository;
+exports.default = ReceiptRepository;
