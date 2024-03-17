@@ -4,7 +4,7 @@ import { config } from '../config/config';
 export class TokenService {
   private static readonly secretKey: string = config.secrets.secretJwt || '';
 
-  static generateToken(data: { email: string; iduser: number }): string {
+  static generateToken(data: { email: string; iduser: string }): string {
     const token = jwt.sign({ data }, this.secretKey, { expiresIn: '24h' });
     return token;
   }

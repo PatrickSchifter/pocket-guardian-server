@@ -29,8 +29,8 @@ class UserRepository {
         return user;
     }
 
-    async confirmEmail(id:number){
-        await prisma.user.update({
+    async confirmEmail(id:string){
+        return await prisma.user.update({
             data:{
                 confirmed: true
             },
@@ -38,6 +38,7 @@ class UserRepository {
                 id
             }
         })
+        
     }
 }
 

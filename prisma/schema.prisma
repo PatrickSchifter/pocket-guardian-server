@@ -1,38 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
-
+// Modelo para um usuário
 model User {
-  id           Int      @id @default(autoincrement())
-  name         String
-  email        String   @unique
-  password     String
-  confirmed    Boolean  @default(false)
-  adminOf      Charge[]
-}
+  id        String    @id @default(uuid())@map("_id")
+  email     String    @unique
+  password  String
+  confirmed Boolean   @default(false)
+  name      String
+  familyId  String?
+  family    Family?   @relation(fields: [familyId], references: [id])
+  expenses  Expense[] // Relação um-para-muitos com despesas
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-model Charge {
-  id           Int        @id @default(autoincrement())
-  description  String
-  adminId      Int        
-  admin        User       @relation(fields: [adminId], references: [id])
-  receipt      Receipt[] 
+  @@map("user")
 }
+model Family {
+  id        String       @id @default(uuid())@map("_id")
+  name      String
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-model Receipt {
-  id           Int      @id @default(autoincrement())
-  url          String?
-  status       String   
-  paid         Boolean @default(false)
-  amount       Float
-  name         String
-  charge       Charge   @relation(fields: [chargeId], references: [id])
-  chargeId     Int      
+  @@map("family")
+}
+model Expense {
+  id         String       @id @default(uuid())@map("_id")
+  title      String
+  amount     Float
+  type       String
+  userId     String
+  status     String
+  dueDate    DateTime?
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("expense")
 }

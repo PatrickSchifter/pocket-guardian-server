@@ -1,4 +1,5 @@
 export const config = {
+    port: process.env.PORT,
     email: {
       from: process.env.EMAIL_FROM,
       sender: process.env.EMAIL_SENDER || '',
@@ -11,7 +12,7 @@ export const config = {
       secretJwt: process.env.SECRET_JWT
     },
     link:{
-      api: process.env.URL_APP,
+      api: process.env.URL_APP || '' + process.env.PORT || '' + '/',
       web: process.env.URL_FRONT
     }
   };

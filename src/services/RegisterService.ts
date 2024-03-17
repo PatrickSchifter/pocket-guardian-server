@@ -20,16 +20,12 @@ export class RegisterService {
         }
 
         const userData = await this.userRepository.createUser(name, email, password);
-        await this.confirmationEmailSender.sendEmail(userData.email, encrypt(userData.id.toString()));
+        await this.confirmationEmailSender.sendEmail(userData.email, userData.id);
         return userData;
     }
 
     async confirmEmail(id: string): Promise<{confirmed: boolean}> {
-        const decryptId = parseInt(decrypt(id));
-        if(!decryptId){
-            throw new Error('Incorrect id')
-        }
-        await this.userRepository.confirmEmail(decryptId);
-            return {confirmed: true};
+        await this.userRepository.confirmEmail(id);
+        return {confirmed: true};
     }
 }

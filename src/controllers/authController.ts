@@ -25,12 +25,12 @@ class AuthController {
     }
 
     async confirmEmail(req: Request, res: Response){
-        const {id} = req.params
+        const {id} = req.params;
         try {
-            const result = await this.registerService.confirmEmail(id)
-            res.send(result)
+            const result = await this.registerService.confirmEmail(id);
+            res.send(result);
         } catch (error:any) {
-            res.status(500).send({error: error.message})
+            res.status(500).send({error: error.message});
         }
 
     }

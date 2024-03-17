@@ -1,6 +1,6 @@
 import ReceiptRepository from "../repository/ReceiptRepository";
 import { ReceiptCreate, Receipt } from "../interfaces/ReceiptInterface";
-import ChargeRepository from "../repository/ChargeRepository";
+import ChargeRepository from "../repository/ExpenseRepository";
 
 export class ReceiptService {
     private receiptRepository: ReceiptRepository;
