@@ -8,13 +8,8 @@ export class ConfirmationEmailSender {
   constructor() {
     this.emailService = new EmailService({
       auth: { pass: config.email.pass, user: config.email.sender },
-      host: "smtp-mail.outlook.com",
-      port: 587,
-      secure: false,
-      tls: {
-        ciphers: 'SSLv3'
-      },
-        });
+      service: config.email.service,
+    });
   }
 
   async sendEmail(email: string, id: string): Promise<void> {
