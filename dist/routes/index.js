@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const authRoutes_1 = __importDefault(require("./authRoutes"));
 const expenseRoutes_1 = __importDefault(require("./expenseRoutes"));
-// import receiptRoutes from './receiptRoutes'
+const groupRoutes_1 = __importDefault(require("./groupRoutes"));
 const router = express_1.default.Router();
 router.use('/auth', authRoutes_1.default);
 router.use('/expense', expenseRoutes_1.default);
-// router.use('/receipt', receiptRoutes);
+router.use('/group', groupRoutes_1.default);
 exports.default = router;

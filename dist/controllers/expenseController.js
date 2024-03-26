@@ -9,11 +9,11 @@ class ExpenseController {
         this.expenseService = new ExpenseService_1.ExpenseService();
     }
     async create(req, res) {
-        const { title, amount, type, userId, status, dueDate } = req.body;
+        const { title, amount, type, userId, status, dueDate, groupId } = req.body;
         try {
             if (userId) {
-                const expense = await this.expenseService.create({ title, amount, type, userId, dueDate: new Date(dueDate), status });
-                res.send(expense);
+                const { data, message, statusCode } = await this.expenseService.create({ title, amount, type, userId, dueDate: new Date(dueDate), status, groupId });
+                res.status(statusCode).send({ message, data });
             }
             else {
                 throw new Error('userId not reconized');
@@ -58,11 +58,12 @@ class ExpenseController {
         const month = req.query.month;
         const type = req.query.type;
         const status = req.query.status;
+        const groupId = req.query.groupid;
         const { initialDay, finalDay } = (0, getInitalAndFinalDayOfMonth_1.getInitialAndFinalDayOfMonth)(parseInt(month.split('-')[0]), parseInt(month.split('-')[1]));
         try {
             if (userId) {
-                const expenses = await this.expenseService.getAllExpenses(userId, initialDay, finalDay, type, status);
-                res.send(expenses);
+                const { data, message, statusCode } = await this.expenseService.getAllExpenses({ userId, initialDay, finalDay, type, status, groupId });
+                res.status(statusCode).send({ message, data });
             }
             else {
                 throw new Error('userId not reconized');

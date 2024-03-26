@@ -9,7 +9,7 @@ const config_1 = require("./config/config");
 const cors_1 = __importDefault(require("cors"));
 const ip_1 = __importDefault(require("ip")); // Importe o pacote ip
 const app = (0, express_1.default)();
-const port = config_1.config.port || 3000;
+const port = config_1.config.port || 3030;
 const serverIp = ip_1.default.address(); // Use o método address() para obter o IP
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());

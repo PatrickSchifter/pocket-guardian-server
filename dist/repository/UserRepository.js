@@ -16,6 +16,14 @@ class UserRepository {
         });
         return users;
     }
+    async findById(id) {
+        const users = await prisma.user.findUnique({
+            where: {
+                id
+            }
+        });
+        return users;
+    }
     async createUser(name, email, password) {
         const user = await prisma.user.create({
             data: {

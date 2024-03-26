@@ -9,6 +9,7 @@ exports.config = {
         pass: process.env.EMAIL_SENDER_PASS || '',
         service: process.env.EMAIL_SERVICE || '',
         link_confirmation: process.env.URL_APP + 'api/auth/confirm-email/',
+        api_key: process.env.APY_KEY_RESEND,
     },
     secrets: {
         secretEncryptId: process.env.SECRET_ID,

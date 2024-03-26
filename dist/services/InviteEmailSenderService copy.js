@@ -1,27 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConfirmationEmailSender = void 0;
+exports.InviteEmailSender = void 0;
 const EmailService_1 = require("./EmailService");
 const config_1 = require("../config/config");
-const htmlConfirmationEmail_1 = require("../utils/htmlConfirmationEmail");
-class ConfirmationEmailSender {
+const htmlInviteEmail_1 = require("../utils/htmlInviteEmail");
+class InviteEmailSender {
     emailService;
     constructor() {
         this.emailService = new EmailService_1.EmailService();
     }
-    async sendEmail(email, id) {
+    async sendEmail(email, group, name) {
         const emailData = {
             to: [email],
-            subject: 'Confirmation Email Pocket Guardian',
-            html: (0, htmlConfirmationEmail_1.getConfirmationEmail)(config_1.config.email.link_confirmation + id || '')
+            subject: `${name} te convidou para o grupo ${group} no Pocket Guardian`,
+            html: (0, htmlInviteEmail_1.getInviteEmail)({ link: config_1.config.link.web + 'login', group, name })
         };
         try {
             const response = await this.emailService.send(email, emailData.subject, emailData.html);
-            console.log(response);
         }
         catch (error) {
             console.error('An error occurred while sending the email:', error);
         }
     }
 }
-exports.ConfirmationEmailSender = ConfirmationEmailSender;
+exports.InviteEmailSender = InviteEmailSender;

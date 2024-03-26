@@ -4,37 +4,111 @@ exports.ExpenseRepository = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 class ExpenseRepository {
-    async getAllExpenses({ id, initialDay, finalDay, type, status }) {
+    async getAllExpenses({ userId, initialDay, finalDay, type, status, groupId }) {
         let expenses;
         let sum;
         let sumIncome;
         let sumOutcome;
         if (type && status) {
-            expenses = await this.getAllExpensesByTypeAndStatus(id, type, initialDay, finalDay, status);
-            sum = await this.getSumExpensesByTypeAndStatus(id, type, initialDay, finalDay, status);
+            expenses = await this.getAllExpensesByTypeAndStatus({
+                userId,
+                type,
+                initialDay,
+                finalDay,
+                status,
+                groupId
+            });
+            sum = await this.getSumExpensesByTypeAndStatus({
+                userId,
+                type,
+                initialDay,
+                finalDay,
+                status,
+                groupId
+            });
         }
         else if (type) {
-            expenses = await this.getAllExpensesByType(id, type, initialDay, finalDay);
-            sum = await this.getSumExpensesByType(id, type, initialDay, finalDay);
+            expenses = await this.getAllExpensesByType({
+                userId,
+                type,
+                initialDay,
+                finalDay,
+                groupId
+            });
+            sum = await this.getSumExpensesByType({
+                userId,
+                type,
+                initialDay,
+                finalDay,
+                groupId
+            });
         }
         else if (status) {
-            expenses = await this.getAllExpensesByStatus(id, status, initialDay, finalDay);
-            sumIncome = await this.getSumExpensesByTypeAndStatus(id, 'INCOME', initialDay, finalDay, status);
-            sumOutcome = await this.getSumExpensesByTypeAndStatus(id, 'OUTCOME', initialDay, finalDay, status);
-            sum = { _sum: { amout: (sumIncome._sum.amount ? sumIncome._sum.amount : 0) - (sumOutcome._sum.amount ? sumOutcome._sum.amount : 0) } };
+            expenses = await this.getAllExpensesByStatus({
+                userId,
+                status,
+                initialDay,
+                finalDay,
+                groupId
+            });
+            sumIncome = await this.getSumExpensesByTypeAndStatus({
+                userId,
+                type: 'INCOME',
+                initialDay,
+                finalDay,
+                status,
+                groupId
+            });
+            sumOutcome = await this.getSumExpensesByTypeAndStatus({
+                userId,
+                type: 'OUTCOME',
+                initialDay,
+                finalDay,
+                status,
+                groupId
+            });
+            sum = {
+                _sum: {
+                    amout: (sumIncome._sum.amount ? sumIncome._sum.amount : 0) -
+                        (sumOutcome._sum.amount ? sumOutcome._sum.amount : 0)
+                }
+            };
         }
         else {
-            expenses = await this.getAllExpensesById(id, initialDay, finalDay);
-            sumIncome = await this.getSumExpensesByType(id, 'INCOME', initialDay, finalDay);
-            sumOutcome = await this.getSumExpensesByType(id, 'OUTCOME', initialDay, finalDay);
-            sum = { _sum: { amout: (sumIncome._sum.amount ? sumIncome._sum.amount : 0) - (sumOutcome._sum.amount ? sumOutcome._sum.amount : 0) } };
+            expenses = await this.getAllExpensesById({
+                userId,
+                initialDay,
+                finalDay,
+                groupId
+            });
+            sumIncome = await this.getSumExpensesByType({
+                userId,
+                type: 'INCOME',
+                initialDay,
+                finalDay,
+                groupId
+            });
+            sumOutcome = await this.getSumExpensesByType({
+                userId,
+                type: 'OUTCOME',
+                initialDay,
+                finalDay,
+                groupId
+            });
+            sum = {
+                _sum: {
+                    amout: (sumIncome._sum.amount ? sumIncome._sum.amount : 0) -
+                        (sumOutcome._sum.amount ? sumOutcome._sum.amount : 0)
+                }
+            };
         }
         return { expenses, sum: sum?._sum };
     }
-    async getAllExpensesById(id, initialDay, finalDay) {
+    async getAllExpensesById({ finalDay, groupId, userId, initialDay }) {
         const expenses = await prisma.expense.findMany({
             where: {
-                userId: id,
+                userId,
+                groupId,
                 dueDate: {
                     gte: initialDay,
                     lt: finalDay,
@@ -43,12 +117,13 @@ class ExpenseRepository {
         });
         return expenses;
     }
-    async getAllExpensesByTypeAndStatus(id, type, initialDay, finalDay, status) {
+    async getAllExpensesByTypeAndStatus({ finalDay, groupId, userId, initialDay, status, type }) {
         const expenses = await prisma.expense.findMany({
             where: {
-                userId: id,
-                type: type,
-                status: status,
+                userId,
+                type,
+                status,
+                groupId,
                 dueDate: {
                     gte: initialDay,
                     lt: finalDay,
@@ -57,11 +132,12 @@ class ExpenseRepository {
         });
         return expenses;
     }
-    async getAllExpensesByType(id, type, initialDay, finalDay) {
+    async getAllExpensesByType({ finalDay, groupId, initialDay, type, userId }) {
         const expenses = await prisma.expense.findMany({
             where: {
-                userId: id,
-                type: type,
+                userId,
+                type,
+                groupId,
                 dueDate: {
                     gte: initialDay,
                     lt: finalDay,
@@ -70,11 +146,12 @@ class ExpenseRepository {
         });
         return expenses;
     }
-    async getAllExpensesByStatus(id, status, initialDay, finalDay) {
+    async getAllExpensesByStatus({ finalDay, groupId, initialDay, status, userId }) {
         const expenses = await prisma.expense.findMany({
             where: {
-                userId: id,
-                status: status,
+                userId,
+                status,
+                groupId,
                 dueDate: {
                     gte: initialDay,
                     lt: finalDay,
@@ -98,15 +175,16 @@ class ExpenseRepository {
         });
         return sum;
     }
-    async getSumExpensesByTypeAndStatus(id, type, initialDay, finalDay, status) {
+    async getSumExpensesByTypeAndStatus({ finalDay, groupId, userId, initialDay, status, type }) {
         const sum = await prisma.expense.aggregate({
             _sum: {
                 amount: true,
             },
             where: {
-                userId: id,
-                type: type,
-                status: status,
+                userId,
+                type,
+                status,
+                groupId,
                 dueDate: {
                     gte: initialDay,
                     lt: finalDay,
@@ -115,14 +193,15 @@ class ExpenseRepository {
         });
         return sum;
     }
-    async getSumExpensesByType(id, type, initialDay, finalDay) {
+    async getSumExpensesByType({ finalDay, groupId, initialDay, type, userId }) {
         const sum = await prisma.expense.aggregate({
             _sum: {
                 amount: true,
             },
             where: {
-                userId: id,
-                type: type,
+                userId,
+                type,
+                groupId,
                 dueDate: {
                     gte: initialDay,
                     lt: finalDay,
@@ -131,14 +210,15 @@ class ExpenseRepository {
         });
         return sum;
     }
-    async getSumExpensesByStatus(id, status, initialDay, finalDay) {
+    async getSumExpensesByStatus({ finalDay, groupId, initialDay, userId, status }) {
         const sum = await prisma.expense.aggregate({
             _sum: {
                 amount: true,
             },
             where: {
-                userId: id,
-                status: status,
+                userId,
+                status,
+                groupId,
                 dueDate: {
                     gte: initialDay,
                     lt: finalDay,
@@ -147,7 +227,7 @@ class ExpenseRepository {
         });
         return sum;
     }
-    async create({ amount, title, type, userId, dueDate, status }) {
+    async create({ amount, title, type, userId, dueDate, status, groupId }) {
         const expense = await prisma.expense.create({
             data: {
                 amount,
@@ -155,7 +235,8 @@ class ExpenseRepository {
                 type,
                 userId,
                 status,
-                dueDate
+                dueDate,
+                groupId
             }
         });
         return expense;
