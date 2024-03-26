@@ -5,6 +5,7 @@ export interface ExpenseCreate {
     userId: string;
     status: string;
     dueDate: Date | null;
+    groupId: string;
 }
 
 export interface Expense extends ExpenseCreate{

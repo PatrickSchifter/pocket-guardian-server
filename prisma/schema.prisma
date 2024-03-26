@@ -19,22 +19,33 @@ model User {
   password  String
   confirmed Boolean   @default(false)
   name      String
-  familyId  String?
-  family    Family?   @relation(fields: [familyId], references: [id])
   expenses  Expense[] // Relação um-para-muitos com despesas
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  groupUser GroupUser[]
 
   @@map("user")
 }
-model Family {
+
+model GroupUser {
+  id String @id @default(uuid())@map("_id")
+  userId String
+  groupId String
+  user       User     @relation(fields: [userId], references: [id])
+  group      Group    @relation(fields: [groupId], references: [id])
+
+  @@map("group_user")
+}
+model Group {
   id        String       @id @default(uuid())@map("_id")
   name      String
-  users     User[]
+  adminId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  expenses  Expense[]
+  groupUser GroupUser[]
 
-  @@map("family")
+  @@map("group")
 }
 model Expense {
   id         String       @id @default(uuid())@map("_id")
@@ -42,11 +53,25 @@ model Expense {
   amount     Float
   type       String
   userId     String
+  groupId    String
   status     String
   dueDate    DateTime?
   user       User     @relation(fields: [userId], references: [id])
+  group      Group    @relation(fields: [groupId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   @@map("expense")
+}
+
+model Invite {
+  id         String       @id @default(uuid())@map("_id")
+  userId     String?
+  email      String
+  invited_by String
+  groupId    String
+  createdAt  DateTime @default(now())
+  response   Boolean? 
+
+  @@map("invite")
 }

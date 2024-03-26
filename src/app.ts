@@ -5,7 +5,7 @@ import cors from 'cors';
 import ip from 'ip'; // Importe o pacote ip
 
 const app = express();
-const port = config.port || 3000;
+const port = config.port || 3030;
 const serverIp = ip.address(); // Use o método address() para obter o IP
 
 app.use(express.json());
