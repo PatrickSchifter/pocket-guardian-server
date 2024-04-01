@@ -62,4 +62,12 @@ export class InviteRepository{
             }
         })
     }
+
+    async deleteInviteByGrouId({groupId}: {groupId: string}) {
+        await prisma.invite.deleteMany({
+            where: {
+                groupId
+            }
+        })
+    }
 }

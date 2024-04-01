@@ -9,7 +9,7 @@ const verifyJWT = async (req: FastifyRequestUserId, reply: Response, next: NextF
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) {
-      reply.status(401).send({ message: 'Token não encontrado.' });
+      reply.status(401).send({ message: 'Token not found.' });
       return;
     }
 
@@ -18,7 +18,7 @@ const verifyJWT = async (req: FastifyRequestUserId, reply: Response, next: NextF
     req.userId = decoded.data.iduser;
     next();
   } catch (err) {
-    reply.status(401).send({ message: 'Token inválido' });
+    reply.status(401).send({ message: 'Invalid token' });
   }
 };
 

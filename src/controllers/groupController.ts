@@ -45,6 +45,17 @@ export class GroupController {
         }
     }
 
+    async getInvite(req: RequestUserId, res: Response){
+        const userId = req.userId as unknown as {userId: string};
+
+        try {
+            const invite = await this.groupService.getInvite({ userId: userId.toString() });
+            res.send(invite);
+        } catch (error) {
+            res.status(500).send(error);
+        }
+    }
+
     async inviteResponse(req: RequestUserId, res: Response){
         const { id, response } = req.body;
         const userId = req.userId as unknown as {userId: string};
@@ -56,4 +67,17 @@ export class GroupController {
             res.status(500).send({error: error.message});
         }
     }
+
+    async deleteGroup(req: RequestUserId, res: Response){
+        const { groupId } = req.body;
+        const userId = req.userId as unknown as {userId: string};
+
+        try {
+            const {statusCode, message, data} = await this.groupService.deleteGroup({groupId, userId: userId.toString()});
+            res.status(statusCode).send({message, data});
+        } catch (error: any) {
+            res.status(500).send({error: error.message});
+        }
+    }
 };
+ 

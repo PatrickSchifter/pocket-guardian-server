@@ -50,4 +50,12 @@ export class GroupRepository{
           });
         return expense;
     }
+
+    async deleteGroupById({id}: {id: string}){
+        await prisma.group.delete({
+            where:{
+                id
+            }
+        })
+    }
 }

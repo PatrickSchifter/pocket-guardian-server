@@ -44,6 +44,6 @@ export class ExpenseService {
     }
 
     async delete(id:string){
-        return await this.expenseRepository.deleteExpenseById(id);
+        return await this.expenseRepository.deleteExpenseById({id});
     }
 }

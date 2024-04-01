@@ -23,6 +23,7 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   groupUser GroupUser[]
+  invite    Invite[]
 
   @@map("user")
 }
@@ -44,6 +45,7 @@ model Group {
   updatedAt DateTime @updatedAt
   expenses  Expense[]
   groupUser GroupUser[]
+  invite     Invite[]
 
   @@map("group")
 }
@@ -69,6 +71,8 @@ model Invite {
   userId     String?
   email      String
   invited_by String
+  inviter    User     @relation(fields: [invited_by], references: [id])
+  group      Group    @relation(fields: [groupId], references: [id])
   groupId    String
   createdAt  DateTime @default(now())
   response   Boolean? 

@@ -58,4 +58,21 @@ export class GroupUserRepository {
 
         return groupUser;
     }
+
+    async deleteGroupUserByUserIdAndGroupId({userId, groupId}: {userId: string; groupId: string}) {
+        return await prisma.groupUser.deleteMany({
+            where: {
+                userId,
+                groupId
+            }
+        })
+    }
+
+    async deleteGroupByGroupId({groupId}: {groupId: string}){
+        return await prisma.groupUser.deleteMany({
+            where:{
+                groupId
+            }
+        })
+    }
 }
