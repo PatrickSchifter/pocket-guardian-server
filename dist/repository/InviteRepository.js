@@ -57,5 +57,12 @@ class InviteRepository {
             }
         });
     }
+    async deleteInviteByGrouId({ groupId }) {
+        await prisma.invite.deleteMany({
+            where: {
+                groupId
+            }
+        });
+    }
 }
 exports.InviteRepository = InviteRepository;

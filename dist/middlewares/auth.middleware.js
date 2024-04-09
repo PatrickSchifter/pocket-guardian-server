@@ -9,7 +9,7 @@ const verifyJWT = async (req, reply, next) => {
     try {
         const token = req.headers.authorization?.replace('Bearer ', '');
         if (!token) {
-            reply.status(401).send({ message: 'Token não encontrado.' });
+            reply.status(401).send({ message: 'Token not found.' });
             return;
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,7 +18,7 @@ const verifyJWT = async (req, reply, next) => {
         next();
     }
     catch (err) {
-        reply.status(401).send({ message: 'Token inválido' });
+        reply.status(401).send({ message: 'Invalid token' });
     }
 };
 const jwtAuthMiddleware = async (req, reply, next) => {

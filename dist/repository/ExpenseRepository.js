@@ -250,13 +250,19 @@ class ExpenseRepository {
             }
         });
     }
-    async deleteExpenseById(id) {
-        const expense = await prisma.expense.delete({
+    async deleteExpenseById({ id }) {
+        return await prisma.expense.delete({
             where: {
-                id: id
+                id
             }
         });
-        return expense;
+    }
+    async deleteExpenseByGroupUserId({ groupId }) {
+        return await prisma.expense.deleteMany({
+            where: {
+                groupId
+            }
+        });
     }
     async getExpenseById(id) {
         const expense = await prisma.expense.findUnique({

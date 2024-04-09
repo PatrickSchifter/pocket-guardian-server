@@ -50,5 +50,20 @@ class GroupUserRepository {
         });
         return groupUser;
     }
+    async deleteGroupUserByUserIdAndGroupId({ userId, groupId }) {
+        return await prisma.groupUser.deleteMany({
+            where: {
+                userId,
+                groupId
+            }
+        });
+    }
+    async deleteGroupByGroupId({ groupId }) {
+        return await prisma.groupUser.deleteMany({
+            where: {
+                groupId
+            }
+        });
+    }
 }
 exports.GroupUserRepository = GroupUserRepository;

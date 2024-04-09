@@ -27,7 +27,7 @@ class ExpenseService {
         return await this.expenseRepository.updateStatus("Paid", id);
     }
     async delete(id) {
-        return await this.expenseRepository.deleteExpenseById(id);
+        return await this.expenseRepository.deleteExpenseById({ id });
     }
 }
 exports.ExpenseService = ExpenseService;

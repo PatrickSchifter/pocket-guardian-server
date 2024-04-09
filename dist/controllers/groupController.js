@@ -39,11 +39,32 @@ class GroupController {
             res.status(500).send({ error: error.message });
         }
     }
+    async getInvite(req, res) {
+        const userId = req.userId;
+        try {
+            const invite = await this.groupService.getInvite({ userId: userId.toString() });
+            res.send(invite);
+        }
+        catch (error) {
+            res.status(500).send(error);
+        }
+    }
     async inviteResponse(req, res) {
         const { id, response } = req.body;
         const userId = req.userId;
         try {
             const { statusCode, message, data } = await this.groupService.inviteReponse({ id, response, userId: userId.toString() });
+            res.status(statusCode).send({ message, data });
+        }
+        catch (error) {
+            res.status(500).send({ error: error.message });
+        }
+    }
+    async deleteGroup(req, res) {
+        const { groupId } = req.body;
+        const userId = req.userId;
+        try {
+            const { statusCode, message, data } = await this.groupService.deleteGroup({ groupId, userId: userId.toString() });
             res.status(statusCode).send({ message, data });
         }
         catch (error) {
