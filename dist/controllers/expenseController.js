@@ -54,20 +54,15 @@ class ExpenseController {
         }
     }
     async getAllExpenses(req, res) {
-        const userId = req.query.userid;
+        const userId = req.userId;
         const month = req.query.month;
         const type = req.query.type;
         const status = req.query.status;
         const groupId = req.query.groupid;
         const { initialDay, finalDay } = (0, getInitalAndFinalDayOfMonth_1.getInitialAndFinalDayOfMonth)(parseInt(month.split('-')[0]), parseInt(month.split('-')[1]));
         try {
-            if (userId) {
-                const { data, message, statusCode } = await this.expenseService.getAllExpenses({ userId, initialDay, finalDay, type, status, groupId });
-                res.status(statusCode).send({ message, data });
-            }
-            else {
-                throw new Error('userId not reconized');
-            }
+            const { data, message, statusCode } = await this.expenseService.getAllExpenses({ userId: userId.toString(), initialDay, finalDay, type, status, groupId });
+            res.status(statusCode).send({ message, data });
         }
         catch (error) {
             res.status(500).send(error);
